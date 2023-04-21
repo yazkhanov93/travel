@@ -1,9 +1,10 @@
 from django.contrib import admin
 from .models import *
 
+
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ["username", "is_superuser"]
+    list_display = ["username", "referal_user", "is_superuser"]
 
 
 @admin.register(Profile)

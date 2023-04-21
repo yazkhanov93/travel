@@ -4,11 +4,14 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class CustomUser(AbstractUser):
-    referal_user = models.CharField(max_length=20, verbose_name="Номер реферала", blank=True, null=True)
-
-    class Meta:
-        verbose_name_plural = "Пользователи"
+    referal_user = models.CharField(max_length=20, blank=True, null=True)
     
+    class Meta:
+        verbose_name_plural = "Users"
+    
+    def __str__(self):
+        return self.username
+
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name="Пользователь", related_name="user_profile")
@@ -22,7 +25,8 @@ class Profile(models.Model):
         verbose_name_plural = "Профилы"
     
     def __str__(self):
-        return f"{self.user.username} {self.firstname} {self.lastname}"
+        return f"{self.firstname} {self.lastname}"
+
 
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
