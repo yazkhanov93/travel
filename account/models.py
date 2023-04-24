@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# from point.models import Point
+
 class CustomUser(AbstractUser):
     referal_user = models.CharField(max_length=20, blank=True, null=True)
     
