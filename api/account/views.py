@@ -22,9 +22,9 @@ class ProfileView(APIView):
             serializer = ProfileSerializer(profile, many=False)
             return Response(serializer.data)
         except:
-            return Response(status=status.HTTP_404_BAD_REQUEST)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    @swagger_auto_schema(request_body=ProfileSerializer)
+    @swagger_auto_schema(request_body=ProfileEditSerializer)
     def put(self, request, format=None):
         try:
             data = request.data
