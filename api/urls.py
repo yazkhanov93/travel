@@ -4,6 +4,7 @@ from api.account.views import *
 from api.tour.views import *
 from api.hotel.views import *
 from api.order.views import *
+from api.task.views import *
 
 
 urlpatterns = [
@@ -21,4 +22,9 @@ urlpatterns = [
 
     path("create-order/", OrderView.as_view(), name="create-order"),
     path("user-order/", UserOrderView.as_view(), name="user-order"),
+
+    path("task-list/", TaskList.as_view(), name="task-list"),
+    path("task/<int:pk>/", TaskDetailView.as_view(), name="task"),
+    path("task-done-list/", TaskDoneList.as_view(), name="task-done-list"),
+    path("task-done/<int:pk>/", TaskDoneDetailView.as_view(), name="task-done"),
 ]
