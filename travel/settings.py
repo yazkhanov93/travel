@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'tour',
     'hotel',
     'order',
-    "point",
+    'point',
+    'task',
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'
