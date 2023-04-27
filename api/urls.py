@@ -12,7 +12,7 @@ urlpatterns = [
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("profile/", ProfileView.as_view(), name="profile"),
 
-    path("home-page/", HomePageView.as_view(), name="home-page"),
+    path("tour-list/", TourList.as_view(), name="tour-list"),
     path("region-list/", RegisonList.as_view(), name="region-list"),
     path("country-list/", CountryList.as_view(), name="country-list"),
     path("city-list/", CityList.as_view(), name="city-list"), 

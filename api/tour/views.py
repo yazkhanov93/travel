@@ -5,12 +5,13 @@ from rest_framework import status
 from tour.models import *
 from hotel.models import *
 
+
 from .serializers import *
 
-class HomePageView(APIView):
+class TourList(APIView):
 
     def get(self, request):
-        try:
+        # try:
             tour = Tour.objects.all().only("id","title","departure_date","night","category","min_price")
             if request.query_params.get("category", None):
                 category = request.query_params.get("category", None)
@@ -26,8 +27,8 @@ class HomePageView(APIView):
                 tour = tour.filter(min_price__lte=max_price)
             serializer = TourSerializer(tour, many=True)
             return Response(serializer.data)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        # except:
+        #     return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class TourDetailView(APIView):

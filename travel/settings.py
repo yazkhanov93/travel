@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'order',
     'point',
     'task',
+    'manager_contact',
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'

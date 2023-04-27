@@ -1,4 +1,5 @@
 from django.db import models
+from manager_contact.models import *
 
 
 class Region(models.Model):
@@ -42,6 +43,7 @@ class Hotel(models.Model):
     point = models.FloatField(verbose_name="Количество баллов")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Минимальная цена за номер")
     link = models.CharField(max_length=255, verbose_name="Опмсание на другом сайте", blank=True, null=True)
+    whatsapp = models.ForeignKey(ManagerContact, on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Отели"
