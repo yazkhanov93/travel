@@ -15,6 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["username","referal_user"]
 
 
+class ReferalUserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = "__all__"
+
+
 class ProfileEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -23,6 +29,11 @@ class ProfileEditSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    referal_user = serializers.SerializerMethodField()
     class Meta:
         model = Profile
         fields = "__all__"
+
+    def get_referal_user(self, obj):
+        referal_user = Profile.objects.filter(user__referal_user=obj.user.username)
+        return ReferalUserProfileSerializer(referal_user, many=True).data
