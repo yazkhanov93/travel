@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import make_password
 
 from account.models import *
 from .serializers import *
+from .utils import send_otp
 
 
 class ProfileView(APIView):
@@ -38,19 +39,35 @@ class ProfileView(APIView):
                 return Response(serializer.errors)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+class GetOtpView(APIView):
+    def post(self, request):
+        data = request.data
+        serializer = UserCreateSerializer(data=data)
+        if serializer.is_valid():
+            otp = send_otp(request)
+            return Response(otp)
+        else:
+            return Response(serializer.errors)
+
 
 class Register(APIView):
     @swagger_auto_schema(request_body=UserCreateSerializer)
     def post(self, request):
-        try:
+        # try:
             data=request.data
             user = CustomUser.objects.create(
                 username=data["username"],
                 referal_user=data["referal_user"],
                 password=make_password(data["password"])
             )
-            serializer = UserCreateSerializer(user)
+            # serializer = UserCreateSerializer(user)
+            # serializer = UserCreateSerializer(data=data)
+            # if serializer.is_valid():
+            #     serializer.save()
             return Response(serializer.data)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        # except:
+        #     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
