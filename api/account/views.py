@@ -1,3 +1,4 @@
+import random
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,8 +12,7 @@ from django.contrib.auth.hashers import make_password
 
 from account.models import *
 from .serializers import *
-from .utils import send_otp
-
+from .utils import *
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -40,34 +40,63 @@ class ProfileView(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-class GetOtpView(APIView):
-    def post(self, request):
-        data = request.data
-        serializer = UserCreateSerializer(data=data)
-        if serializer.is_valid():
-            otp = send_otp(request)
-            return Response(otp)
-        else:
-            return Response(serializer.errors)
-
-
 class Register(APIView):
     @swagger_auto_schema(request_body=UserCreateSerializer)
     def post(self, request):
-        # try:
+        try:
             data=request.data
             user = CustomUser.objects.create(
                 username=data["username"],
                 referal_user=data["referal_user"],
                 password=make_password(data["password"])
             )
-            # serializer = UserCreateSerializer(user)
-            # serializer = UserCreateSerializer(data=data)
-            # if serializer.is_valid():
-            #     serializer.save()
+            send_otp(data["username"])
+            serializer = UserSerializerWithToken(user)
             return Response(serializer.data)
-        # except:
-        #     return Response(status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+class VerifyOtpView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        try:
+            data = request.data
+            serializer = VerifyOtpSerializer(data=data)
+            if serializer.is_valid():
+                user = CustomUser.objects.get(username=request.user)
+                user.is_verified = True
+                user.save()
+            return Response()
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetPasswordResetCodeView(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            username = data["username"]
+            user = CustomUser.objects.get(username=username)
+            otp = user.otp
+            password_reset_otp(otp, username)
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordView(APIView):
+    def post(self, request):
+        try:
+            data=request.data
+            serializer = PasswordResetSerializer(data=data)
+            if serializer.is_valid():
+                user = CustomUser.objects.get(username=data["username"])
+                if user.otp == data["otp"]:
+                    user.password = make_password(data["password"])
+                    user.save()
+                else:
+                    return Response({"otp is not valid"})
+                return Response({"Password was changed"})
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

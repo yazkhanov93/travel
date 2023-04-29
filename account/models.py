@@ -7,6 +7,8 @@ from django.dispatch import receiver
 
 class CustomUser(AbstractUser):
     referal_user = models.CharField(max_length=20, blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=5, blank=True, null=True)
     
     class Meta:
         verbose_name_plural = "Users"

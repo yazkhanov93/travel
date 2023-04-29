@@ -8,10 +8,12 @@ from api.task.views import *
 
 
 urlpatterns = [
-    path("get-opt/", GetOtpView.as_view(), name="get-opt"),
     path("register/", Register.as_view(), name="register"),
+    path("verify-otp/", VerifyOtpView.as_view(), name="verify-otp"),
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("profile/", ProfileView.as_view(), name="profile"),
+    path("password-reset-code/", GetPasswordResetCodeView.as_view(), name="password-reset-code"),
+    path("reset-password/", ResetPasswordView.as_view(), name="reset-password"),
 
     path("tour-list/", TourList.as_view(), name="tour-list"),
     path("region-list/", RegisonList.as_view(), name="region-list"),
