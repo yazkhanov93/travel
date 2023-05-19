@@ -94,6 +94,8 @@ class ResetPasswordView(APIView):
                 user = CustomUser.objects.get(username=data["username"])
                 if user.otp == data["otp"]:
                     user.password = make_password(data["password"])
+                    otp = random.randint(1000, 9999)
+                    user.otp = otp
                     user.save()
                 else:
                     return Response({"otp is not valid"})
